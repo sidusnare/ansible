@@ -1,0 +1,200 @@
+repos64:
+  - repo: "deb http://prerelease.keybase.io/deb stable main"
+    file: keybase
+  - repo: "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main"
+    file: google-chrome
+  - repo: "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian {{ ansible_distribution_release }} contrib"
+    file: virtualbox
+  - repo: "deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
+    file: hashicorp
+  - repo: "deb [arch=amd64] https://d3nt0h4h6pmmc4.cloudfront.net/ubuntu focal main"
+    file: amazon
+  - repo: "deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] https://packages.element.io/debian/ default main"
+    file: element
+
+repos:
+  - repo: "deb https://packagecloud.io/slacktechnologies/slack/debian/ jessie main"
+    file: slack
+  - repo: "deb [arch=amd64,i386] https://repo.steampowered.com/steam/ stable steam"
+    file: steam-stable
+  - repo: "deb-src [arch=amd64,i386] https://repo.steampowered.com/steam/ stable steam"
+    file: steam-stable
+  - repo: "deb https://deb.opera.com/opera-stable/ stable non-free"
+    file: opera-stable
+
+keys:
+  - B9F8D658297AF3EFC18D5CDFA2F683C52980AECF
+  - 798AEC654E5C15428C8E42EEAA16FCBCA621E701
+  - 4CCA1EAF950CEE4AB83976DCA040830F7FAC5991
+  - ADA09A0E9B80ACCCE8FE6BB65345B8BF43403B93
+  - 9701D4A1B4D92E261C8C66FE24A1004B1F11DCC9
+  - EB4C1BFD4F042F6DDDCCEC917721F63BD38B4796  
+  - 7B0FAB3A13B907435925D9C954422A4B98AB5139
+  - D4040146BE3972509FD57FC71F3045A5DF7587C3
+  - A6BF651A1797E7C4A825CA2FBEB35010ADB332E7
+  - DB085A08CA13B8ACB917E0F6D938EC0D038651BD
+  - BA1816EF8E75005FCF5E27A1F24AEA9FB05498B7
+  - 798AEC654E5C15428C8E42EEAA16FCBCA621E701
+  - 4D64FEC119C2029067D6E791F8D2585B8783D481
+  - 222B85B0F90BE2D24CFEB93F47484E50656D16C7
+
+keyfiles:
+
+remove: 
+  - command-not-found
+  - python3-commandnotfound
+
+keyurls:
+  - url: "https://packages.element.io/debian/element-io-archive-keyring.gpg"
+    file: "/usr/share/keyrings/element-io-archive-keyring.gpg"
+  - url: "https://www.kismetwireless.net/repos/kismet-release.gpg.key"
+    file: "/usr/share/keyrings/kismet-archive-keyring.gpg"
+
+packagesx32:
+  - acpi
+
+packagesx64:
+  - acpi
+
+packages:
+  - ocaml
+  - ocaml-dune
+  - python3-venv
+  - binwalk
+  - xxd
+  - acl
+  - ifenslave
+  - rdfind
+  - adb
+  - android-tools-fastboot
+  - android-sdk-libsparse-utils
+  - colordiff
+  - rename
+  - apt-transport-https
+  - prometheus-node-exporter
+  - golang
+  - openjdk-17-jdk-headless
+  - aptitude
+  - arj
+  - sudo
+  - gddrescue
+  - blktool
+  - cdrdao
+  - bchunk
+  - bc
+  - lame
+  - cdrecord
+  - womid
+  - dislocker
+  - attr
+  - wireguard-tools
+  - autofs
+  - build-essential
+  - pkg-config
+  - libc6-dev
+  - libssl-dev
+  - libexpat1-dev
+  - zlib1g-dev
+  - checksec
+  - cryptsetup
+  - curl
+  - daemontools
+  - debconf-utils
+  - dnsutils
+  - dos2unix
+  - elfutils
+  - emacs
+  - expect
+  - fastboot
+  - gawk
+  - gdb
+  - iptraf-ng
+  - gdisk
+  - gem2deb
+  - git
+  - gpm
+  - hfsutils
+  - htop
+  - inotify-tools
+  - iotop
+  - ipcalc
+  - iptables-persistent
+  - iw
+  - jq
+  - kexec-tools
+  - lftp
+  - lhasa
+  - libnetaddr-ip-perl
+  - lshw
+  - lsof
+  - lsscsi
+  - lvm2
+  - lynx
+  - mailutils
+  - mc
+  - mdadm
+  - memtest86+
+  - minicom
+  - mkbootimg
+  - mrtg
+  - ncal 
+  - ncftp
+  - netfilter-persistent
+  - ntfs-3g
+  - ntpdate
+  - openssh-client
+  - openssh-server
+  - openssl
+  - iperf3
+  - postfix
+  - pv
+  - quota
+  - rfkill
+  - rpl
+  - rpm
+  - rsync
+  - rubygems-integration
+  - runit
+  - screen
+  - sharutils
+  - software-properties-common
+  - sqlite3
+  - syslinux-utils
+  - tcputils
+  - tig
+  - tofrodos
+  - unace
+  - unzip
+  - vim
+  - w3m
+  - wget
+  - whois
+  - xfsdump
+  - xfsprogs
+  - fdutils
+  - nmap
+  - htop
+  - uuid-runtime
+  - net-tools
+  - python2.7
+  - python3.9
+  - python3-pip
+  - ansible
+  - mtools
+  - openvpn
+  - shellcheck
+  - tcpdump
+  - telnet
+  - mtr
+  - autossh
+  - cron
+  - alien
+  - rar
+  - bridge-utils
+  - locales-all
+  - arping
+  - php-cli
+  - snmp
+  - python3-serial
+  - ethtool
+  - xz-utils

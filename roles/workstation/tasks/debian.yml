@@ -1,0 +1,22 @@
+- name: Load vars
+  ansible.builtin.include_vars: debian.yml
+
+- name: get installed list
+  shell: "dpkg -l | grep '^ii' | sed -e 's/  */ /g' | cut -d ' ' -f 2 | sort -u"
+  register: apt_installed_out
+- set_fact:
+    apt_installed: "{{ apt_installed_out.stdout_lines }}"
+
+- name: get installable list
+  shell: "apt-cache search . | sed -e 's/  */ /' | cut -d ' ' -f 1 | sort -u"
+  register: apt_installable_out
+- set_fact:
+    apt_installable: "{{ apt_installable_out.stdout_lines }}"
+
+
+- name: Install workstation packages
+  apt:
+    name: '{{ item }}'
+    state: present
+    update_cache: false
+  loop: "{{ packages | intersect(apt_installable_out.stdout_lines) | difference(apt_installed_out.stdout_lines) }}"

@@ -1,0 +1,2 @@
+deb [ arch=armhf ] http://raspbian.raspberrypi.com/raspbian/ {{ ansible_facts['distribution_release'] }} main contrib non-free rpi
+deb-src http://raspbian.raspberrypi.com/raspbian/ {{ ansible_facts['distribution_release'] }} main contrib non-free rpi

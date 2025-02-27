@@ -1,0 +1,29 @@
+- name: Load vars
+  ansible.builtin.include_vars: gentoo.yml
+
+- name: Get installed list
+  register: qlist_installed_out
+  shell: ' qlist -I | sort -u'
+- set_fact:
+    apt_installed: '{{ qlist_installed_out.stdout_lines }}'
+
+- name: Get installable list
+  register: equery_installable_out
+  shell: equery l -I -p -f '.*' --format='$cp'
+
+- name: Save installable list to fact
+  set_fact:
+    equery_installable: '{{ equery_installable_out.stdout_lines }}'
+
+- name: Install Gentoo workstation packages
+  portage:
+    name: '{{ item }}'
+    state: present
+  loop: '{{ packages | intersect(equery_installable_out.stdout_lines) | difference(qlist_installed_out.stdout_lines) }}'
+
+- name: Try to install broken Gentoo workstation packages
+  portage:
+    name: '{{ item }}'
+    state: present
+  ignore_errors: true
+  loop: '{{ broken | intersect(equery_installable_out.stdout_lines) | difference(qlist_installed_out.stdout_lines) }}'

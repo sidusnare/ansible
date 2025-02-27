@@ -1,0 +1,14 @@
+
+pip:
+  - pre-commit
+  - pip
+  - rainbowstream
+  - yt-dlp
+  - pyyaml
+  - rokucli
+  - audible
+  - awscli
+
+gems:
+  - route53
+  - ipaddr

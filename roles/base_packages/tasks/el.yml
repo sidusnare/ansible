@@ -1,0 +1,55 @@
+---
+- name: Load vars
+  ansible.builtin.include_vars: el.yml
+
+- name: Import repo GPG keys
+  rpm_key:
+    key: "{{ item.key_url }}"
+    state: present
+  loop: "{{ repos }}"  
+
+- name: Install EPEL repo.
+  ansible.builtin.yum_repository:
+    baseurl: "{{ item.url }}"
+    name: "{{ item.name }}"
+    description: "{{ item.name }}"
+    state: present
+    file: ansible_repos
+    enabled: yes
+  loop: "{{ repos }}"  
+
+- name: Enable repos
+  shell: "dnf config-manager --set-enabled {{ item }}"
+  loop: "{{ repos_enable }}"
+
+- name: get installed list
+  shell: "yum list installed 2>> /dev/null | cut -d . -f 1 | grep -v '^Installed Packages' | sort -u"
+  register: yum_installed_out
+- set_fact:
+    yum_installed: "{{ yum_installed_out.stdout_lines }}"
+
+- name: get installable list
+  shell: "yum list available 2>> /dev/null | cut -d . -f 1 | grep -E -v '^Last metadata expiration check|Available Packages' | sort -u "
+  register: yum_installable_out
+- set_fact:
+    yum_installable: "{{ yum_installable_out.stdout_lines }}"
+
+- name: Install base packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  ignore_errors: true
+  loop: "{{ packages | intersect(yum_installable_out.stdout_lines) | difference(yum_installed_out.stdout_lines) }}"
+
+- name: Copy /usr/lib/dkms/lsb_release somewhere useful 1/2
+  stat:
+    path: /usr/lib/dkms/lsb_release
+  register: lsb_release
+
+- name: Copy /usr/lib/dkms/lsb_release somewhere useful 2/2
+  copy:
+    src: /usr/lib/dkms/lsb_release
+    dest: /usr/local/bin/
+    mode: 0755
+    remote_src: true
+  when: lsb_release.stat.exists == True

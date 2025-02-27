@@ -1,0 +1,136 @@
+repos:
+  - name: "google-chrome"
+    description: "Google Chrome repo"
+    url: "https://dl.google.com/linux/chrome/rpm/stable/x86_64"
+  - name: "slack"
+    description: "Slack messaginc client repo"
+    url: "https://packagecloud.io/slacktechnologies/slack/fedora/21/x86_64"
+
+keyfiles:
+  - google.pub
+  - slack.key
+
+packages:
+    - "@Development tools"
+    - "@Workstation"
+    - "@Legacy UNIX Compatibility"
+    - arj
+    - autotrace
+    - awscli
+    - barrier
+    - ImageMagick-perl
+    - blender
+    - chromium
+    - clang
+    - cups
+    - cvs
+    - dconf-editor
+    - dolphin
+    - eog
+    - gdm
+    - gedit
+    - gimp
+    - git-all
+    - gnome-keyring
+    - gnome-terminal
+    - gwenview
+    - hexchat
+    - i3
+    - icewm
+    - tigervnc
+    - tigervnc-server
+    - ffmpeg-free
+    - imagemagick
+    - inkscape
+    - jq
+    - k3b
+    - kate
+    - kdiff3
+    - kmail
+    - kompare
+    - kompare
+    - konqueror
+    - lftp
+    - mate-common
+    - mate-notification-daemon
+    - metacity
+    - mpg123
+    - openbox
+    - pavucontrol
+    - pulseaudio
+    - python3-pip
+    - qrencode
+    - rdesktop
+    - samba
+    - shellcheck
+    - solaar
+    - stalonetray
+    - subversion
+    - tig
+    - unrar
+    - virt-manager
+    - wireshark
+    - x11vnc
+    - xclip
+    - xdotool
+    - xfwm4
+    - xmonad
+    - xscreensaver
+    - xterm
+    - zenity
+    - mate-applets
+    - mate-backgrounds
+    - mate-calc
+    - mate-common
+    - mate-control-center
+    - mate-control-center-devel
+    - mate-control-center-filesystem
+    - mate-desktop
+    - mate-desktop-configs
+    - mate-desktop-devel
+    - mate-desktop-libs
+    - mate-dictionary
+    - mate-disk-image-mounter
+    - mate-disk-usage-analyzer
+    - mate-icon-theme
+    - mate-media
+    - mate-menu
+    - mate-menus
+    - mate-menus-devel
+    - mate-menus-libs
+    - mate-menus-preferences-category-menu
+    - mate-notification-daemon
+    - mate-panel
+    - mate-panel-devel
+    - mate-panel-libs
+    - mate-polkit
+    - mate-power-manager
+    - mate-screensaver
+    - mate-screensaver-devel
+    - mate-screenshot
+    - mate-search-tool
+    - mate-sensors-applet
+    - mate-sensors-applet-devel
+    - mate-session-manager
+    - mate-settings-daemon
+    - mate-settings-daemon-devel
+    - mate-system-log
+    - mate-system-monitor
+    - mate-terminal
+    - mate-themes
+    - mate-user-admin
+    - mate-user-guide
+    - mate-utils
+    - mate-utils-common
+    - mate-utils-devel
+    - guvcview
+    - google-chrome-stable
+    - flatpak
+
+flatpaks:
+    - org.kde.kdenlive
+    - com.obsproject.Studio
+    - com.valvesoftware.Steam
+    - org.videolan.VLC
+    - com.discordapp.Discord
+

@@ -1,0 +1,157 @@
+- name: Load vars
+  ansible.builtin.include_vars: debian.yml
+
+- name: Set base sources for Ubuntu
+  template:
+    src: ubuntu_sources
+    dest: /etc/apt/sources.list
+    mode: 0644
+    owner: 0
+    group: 0
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Set base sources for Debian
+  template:
+    src: debian_sources
+    dest: /etc/apt/sources.list
+    mode: 0644
+    owner: 0
+    group: 0
+  when:
+    - ansible_distribution == 'Debian'
+    - ansible_facts['lsb']['id'] != 'Raspbian'
+    - not ansible_processor | select('match', '^ARMv6') | list | length > 0
+
+- name: Set base sources for old Raspbian
+  template:
+    src: raspbian_legacy_sources
+    dest: /etc/apt/sources.list
+    mode: 0644
+    owner: 0
+    group: 0
+  when:
+    - ansible_distribution == 'Debian'
+    - ansible_facts['lsb']['id'] == 'Raspbian'
+    - ansible_processor | select('match', '^ARMv6') | list | length > 0
+
+- name: Set base sources for Raspbian
+  template:
+    src: raspbian_sources
+    dest: /etc/apt/sources.list
+    mode: 0644
+    owner: 0
+    group: 0
+  when:
+    - ansible_distribution == 'Debian'
+    - ansible_facts['lsb']['id'] == 'Raspbian'
+    - not ansible_processor | select('match', '^ARMv6') | list | length > 0
+
+- name: Install prerequisites
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: false
+  with_items:
+   - gpg
+   - apt-transport-https
+
+- name: Add repositories
+  apt_repository:
+    repo: "{{ item.repo }}"
+    filename: "{{ item.file }}"
+    state: present
+    update_cache: False
+  loop: "{{ repos }}"
+
+- name: Add x86_64 repositories
+  apt_repository:
+    repo: "{{ item.repo }}"
+    filename: "{{ item.file }}"
+    state: present
+    update_cache: False
+  loop: "{{ repos64 }}"
+  when: ansible_architecture == "x86_64"
+
+- name: Add repo keyfiles from URLs
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ item.file }}"
+    mode: 0644
+    owner: 0
+    group: 0
+  loop: "{{ keyurls }}"
+
+- name: Add repo keys
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: "{{ item }}"
+  loop: "{{ keys }}"
+
+- name: Add Kismet
+  apt_repository:
+    repo: "deb https://www.kismetwireless.net/repos/apt/release/{{ ansible_distribution_release }} {{ ansible_distribution_release }} main"
+    filename: kismet
+    state: present
+    update_cache: False
+  when: ( ansible_distribution_release == "stretch" ) or ( ansible_distribution_release == "groovy" ) or ( ansible_distribution_release == "xenial" ) or ( ansible_distribution_release == "hirsute" ) or ( ansible_distribution_release == "impish" ) or ( ansible_distribution_release == "focal" ) or ( ansible_distribution_release == "buster" ) or ( ansible_distribution_release == "mantic" ) or ( ansible_distribution_release == "bionic" ) or ( ansible_distribution_release == "bookworm" ) or ( ansible_distribution_release == "jammy" ) or ( ansible_distribution_release == "kinetic" ) or ( ansible_distribution_release == "lunar" ) or ( ansible_distribution_release == "kali" ) or ( ansible_distribution_release == "bullseye" )
+
+- name: Update apt
+  apt:
+    update_cache: yes
+
+- name: Fetch missing old keys
+  script:
+    cmd: convert-keys.sh
+
+- name: get installed list
+  shell: "dpkg -l | grep '^ii' | sed -e 's/  */ /g' | cut -d ' ' -f 2 | sort -u"
+  register: apt_installed_out
+- set_fact:
+    apt_installed: "{{ apt_installed_out.stdout_lines }}"
+
+- name: get installable list
+  shell: "apt-cache search . | sed -e 's/  */ /' | cut -d ' ' -f 1 | sort -u"
+  register: apt_installable_out
+- set_fact:
+    apt_installable: "{{ apt_installable_out.stdout_lines }}"
+
+
+- name: Install base packages for x64
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: false
+  loop: "{{ packagesx64 | intersect(apt_installable_out.stdout_lines) | difference(apt_installed_out.stdout_lines) }}"
+  when: ansible_architecture == "x86_64"
+
+- name: Install base packages for x32
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: false
+  loop: "{{ packagesx32 | intersect(apt_installable_out.stdout_lines) | difference(apt_installed_out.stdout_lines) }}"
+  when: ansible_architecture == "i386"
+
+- name: Install base packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: false
+  loop: "{{ packages | intersect(apt_installable_out.stdout_lines) | difference(apt_installed_out.stdout_lines) }}"
+
+- name: Get path to vim
+  command: which vim
+  register: path_to_vim
+
+- name: Set VIM as editor
+  community.general.alternatives:
+    name: editor
+    path: "{{ path_to_vim.stdout }}"
+
+- name: Install base packages
+  apt:
+    name: "{{ item }}"
+    state: absent
+    update_cache: false
+  loop: "{{ remove }}"
+

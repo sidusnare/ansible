@@ -1,0 +1,68 @@
+---
+
+- name: Check for fred4 local directory
+  stat:
+    path: ~fred4/usr/local
+  register: fred4ul
+
+- name: Install debian packages
+  include_tasks: debian.yml
+  when: ansible_pkg_mgr == "apt"
+
+- name: Install EnterpriseLinux packages
+  include_tasks: el.yml
+  when: ( ansible_pkg_mgr == "yum" ) or ( ansible_pkg_mgr == "dnf" )
+
+- name: Install Gentoo packages
+  include_tasks: gentoo.yml
+  when: ansible_pkg_mgr == "portage"
+
+- name: Chown brew paths
+  ansible.builtin.file:
+    recurse: true
+    owner: admin
+    mode: u=rwX,g=rX,o=rX
+    path: '{{ item }}'
+  when: ansible_facts['system'] == "Darwin"
+  with_items:
+    - /usr/local/bin
+    - /usr/local/sbin
+    - /usr/local/var/homebrew/linked
+    - /usr/local/var/homebrew/locks
+
+- block:
+  - name: Install MacOS brew
+    include_tasks:
+      file: darwin.yml
+  when: ansible_facts['system'] == "Darwin"
+  become: true
+  become_user: admin
+
+- name: Install PIP packages
+  pip:
+    name: "{{ item }}"
+    virtualenv: /usr/local/
+    state: latest
+    virtualenv_site_packages: true
+    virtualenv_command: "python3 -m venv"
+  loop: "{{ pip }}"
+
+- block:
+  - name: "Install PIP packages for fred4"
+    pip:
+      name: "{{ item }}"
+      virtualenv: ~fred4/usr/local/
+      state: latest
+      virtualenv_site_packages: true
+      virtualenv_command: "python3 -m venv"
+    when: fred4ul.stat.exists
+    loop: "{{ pip }}"
+  become: true
+  become_user: "fred4"
+
+- name: Install Ruby gems
+  gem:
+    name: "{{ item }}"
+    state: latest
+    user_install: false
+  with_items: "{{ gems }}"

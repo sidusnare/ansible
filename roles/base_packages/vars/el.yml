@@ -1,0 +1,152 @@
+---
+
+repos:
+- name: epel
+  url: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+  key_url: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}"
+- name: google-chrome
+  url: "https://dl.google.com/linux/chrome/rpm/stable/{{ ansible_architecture }}"
+  key_url: "https://dl.google.com/linux/linux_signing_key.pub"
+
+
+
+packages:
+  - python3-pip
+  - sqlite
+  - wireguard-tools
+  - python3-dnf-plugin-versionlock
+  - java-latest-openjdk      
+  - java-latest-openjdk-devel
+  - vim-enhanced
+  - golang-github-prometheus-node-exporter
+  - util-linux
+  - syslinux
+  - dkms
+  - python3
+  - policycoreutils-python-utils
+  - ntpsec
+  - ntpdate
+  - acl
+  - acpid
+  - android-tools
+  - arj
+  - at
+  - attr
+  - dkms
+  - autofs
+  - bridge-utils
+  - checksec
+  - cryptsetup
+  - curl
+  - debconf-utils
+  - dmidecode
+  - dos2unix
+  - ed
+  - elfutils
+  - emacs
+  - epel-release
+  - expect
+  - iperf3
+  - gawk
+  - gcc
+  - gdb
+  - gdisk
+  - git
+  - gpm
+  - htop
+  - inotify-tools
+  - iotop
+  - colordiff
+  - ipcalc
+  - iw
+  - jq
+  - kexec-tools
+  - lftp
+  - libstdc++.i686
+  - libxml2.i686
+  - lshw
+  - lsof
+  - lsscsi
+  - lvm2
+  - lynx
+  - make
+  - mc
+  - mdadm
+  - memtest86+
+  - minicom
+  - mrtg
+  - ncftp
+  - net-tools
+  - nmap
+  - ntfs-3g
+  - openssh-clients
+  - openssh-server
+  - openssl
+  - iptraf-ng
+  - patch
+  - perl-App-cpanminus
+  - perl-Dist-CheckConflicts
+  - perl-File-Tail
+  - perl-HTML-Parser
+  - perl-Image-ExifTool
+  - perl-NetAddr-IP
+  - perl-libwww-perl
+  - perl-Module-Implementation
+  - perl-Module-ScanDeps
+  - perl-Package-Stash
+  - perl-Package-Stash-XS
+  - perl-PAR-Packer
+  - perl-Regexp-Common
+  - perl-Sys-MemInfo
+  - perl-Test-Deep
+  - perl-Test-Fatal
+  - perl-Test-Mock-Guard
+  - perl-Test-Requires
+  - policycoreutils-devel
+  - postfix
+  - psmisc
+  - pv
+  - python3-pip
+  - quota
+  - rpm
+  - rsync
+  - ruby
+  - ruby-devel
+  - rubygems
+  - screen
+  - sharutils
+  - smartmontools
+  - strace
+  - tig
+  - time
+  - tofrodos
+  - unzip
+  - w3m
+  - wget
+  - whois
+  - xfsdump
+  - xfsprogs
+  - yum-utils
+  - ansible
+  - mtr
+  - alien
+
+repos_enable:
+  - epel
+  - epel-cisco-openh264
+  - epel-cisco-openh264-source
+  - epel-source
+  - google-chrome
+  - slack
+  - rhel-{{ ansible_distribution_major_version }}-for-{{ ansible_architecture }}-appstream-rpms
+  - rhel-{{ ansible_distribution_major_version }}-for-{{ ansible_architecture }}-appstream-source-rpms
+  - rhel-{{ ansible_distribution_major_version }}-for-{{ ansible_architecture }}-baseos-rpms
+  - rhel-{{ ansible_distribution_major_version }}-for-{{ ansible_architecture }}-baseos-source-rpms
+  - rhel-{{ ansible_distribution_major_version }}-for-{{ ansible_architecture }}-supplementary-rpms
+  - rhel-{{ ansible_distribution_major_version }}-for-{{ ansible_architecture }}-supplementary-source-rpms
+#  - rhel-{{ ansible_distribution_major_version }}-for-{{ ansible_architecture }}-baseos-eus-rpms
+#  - rhel-{{ ansible_distribution_major_version }}-for-{{ ansible_architecture }}-baseos-eus-source-rpms
+  - rhv-4-tools-for-rhel-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}-rpms
+  - rhv-4-tools-for-rhel-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}-source-rpms
+  - codeready-builder-for-rhel-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}-rpms
+  - codeready-builder-for-rhel-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}-source-rpms

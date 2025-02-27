@@ -1,0 +1,29 @@
+dev-libs/efl drm
+dev-libs/libpcre2 pcre32
+dev-qt/qtwebengine widgets
+gnome-base/gnome-extra-apps -share
+gnustep-base/gnustep-make native-exceptions
+gui-libs/wlroots x11-backend
+media-libs/freetype harfbuzz utils
+media-libs/libmediaart -gtk qt5
+media-libs/libv4l utils
+media-libs/opencv contrib contribdnn
+media-plugins/gst-plugins-meta http
+media-video/ffmpeg amr amrenc bluray codec2 cpudetection gmp gsm iec61883 ieee1394 ladspa libaribb24 libass libcaca libdrm librtmp libsoxr libtesseract libv4l libxml2 modplug mp3 openh264 speex theora twolame v4l vaapi vorbis vpx webp xvid
+media-video/guvcview qt5
+net-dns/dnsmasq script
+net-firewall/nftables doc json
+net-libs/gnutls pkcs11 tools
+net-libs/nodejs inspector
+net-misc/freerdp client
+net-misc/modemmanager mbim
+net-misc/spice-gtk usbredir
+sys-apps/util-linux caps
+sys-boot/grub mount
+sys-libs/zlib minizip
+dev-vcs/subversion -doc
+app-arch/rpm -lua_single_target_lua5-3 lua_single_target_lua5-4
+x11-misc/xdialog doc examples
+net-analyzer/wireshark lua_single_target_lua5-4
+x11-wm/xpra -python_single_target_python3_10 python_single_target_python3_11 -python_single_target_python3_12
+

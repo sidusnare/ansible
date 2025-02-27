@@ -1,0 +1,33 @@
+- name: Load vars
+  ansible.builtin.include_vars: darwin.yml
+
+- name: Ensuring Homebrew Is Installed
+  stat:
+    path: /usr/local/bin/brew
+  register: homebrew_check
+
+- name: Installing Homebrew
+  shell: /usr/local/bin/brew_install.sh
+  when: not homebrew_check.stat.exists
+
+- name: get installed list
+  shell: /usr/local/bin/brew list
+  register: brew_installed_out
+- set_fact:
+    brew_installed: '{{ brew_installed_out.stdout_lines }}'
+
+- name: get installable list
+  register: brew_installable_out
+  shell: /usr/local/bin/brew search .
+
+- name: save installable list to facts
+  set_fact:
+    brew_installable: '{{ brew_installable_out.stdout_lines }}'
+
+- name: Install workstation packages
+  community.general.homebrew:
+    name: '{{ item }}'
+    state: present
+  ignore_errors: true
+  loop: '{{ packages | intersect(brew_installable_out.stdout_lines) | difference(brew_installed_out.stdout_lines) }}'
+  name: Install base packages

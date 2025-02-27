@@ -1,0 +1,61 @@
+- name: Load vars
+  ansible.builtin.include_vars: gentoo.yml
+
+- name: Deploy custom repo
+  synchronize:
+    checksum: true
+    src: "gentoo_repo"
+    dest: "/var/db/repos/sidusnare/"
+
+- name: Ansible use flags
+  copy:
+    src: gentoo/use
+    dest: /etc/portage/package.use/ansible_managed
+    owner: 0
+    group: 0
+    mode: 0755
+
+- name: Ansible keywords
+  copy:
+    src: gentoo/accept_keywords
+    dest: /etc/portage/package.accept_keywords/ansible_managed
+    owner: 0
+    group: 0
+    mode: 0755
+
+- name: Install prerequisites
+  portage:
+    name: '{{ item }}'
+    state: present
+  with_items:
+  - app-portage/portage-utils
+  - app-portage/gentoolkit
+  - app-portage/eix
+  - app-portage/cpuid2cpuflags
+  - app-portage/mirrorselect
+
+- name: get installed list 1/2
+  register: qlist_installed_out
+  shell: ' qlist -I | sort -u'
+- name: get installed list 2/2
+  set_fact:
+    apt_installed: '{{ qlist_installed_out.stdout_lines }}'
+
+- name: get installable list 1/2
+  register: equery_installable_out
+  shell: equery l -I -p -f '.*' --format='$cp'
+- name: get installable list 2/2
+  set_fact:
+    equery_installable: '{{ equery_installable_out.stdout_lines }}'
+
+- name: Install base packages
+  portage:
+    name: '{{ item }}'
+    state: present
+  loop: '{{ packages | intersect(equery_installable_out.stdout_lines) | difference(qlist_installed_out.stdout_lines) }}'
+
+- name: Remove packages
+  portage:
+    name: '{{ item }}'
+    state: absent
+  loop: '{{ remove }}'

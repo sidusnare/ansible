@@ -1,0 +1,58 @@
+---
+
+- name: Load vars
+  ansible.builtin.include_vars: el.yml
+
+
+- name: Deploy RPM keys.
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/pki/rpm-gpg/{{ item }}"
+    mode: 0644
+    owner: root
+  loop: "{{ keyfiles }}"
+
+- name: Import RPM keys.
+  rpm_key:
+    key: "/etc/pki/rpm-gpg/{{ item }}"
+    state: present
+  ignore_errors: true
+  loop: "{{ keyfiles }}"
+
+- name: Install custom repos
+  yum_repository:
+    baseurl: "{{ item.url }}"
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    state: present
+  with_items: "{{ repos }}"
+
+- name: get installed list
+  shell: "yum list installed 2>> /dev/null | cut -d . -f 1 | grep -v '^Installed Packages' | sort -u"
+  register: yum_installed_out
+- set_fact:
+    yum_installed: "{{ yum_installed_out.stdout_lines }}"
+
+- name: get installable list
+  shell: "yum list available 2>> /dev/null | cut -d . -f 1 | grep -E -v '^Last metadata expiration check|Available Packages' | sort -u "
+  register: yum_installable_out
+- set_fact:
+    yum_installable: "{{ yum_installable_out.stdout_lines }}"
+
+- name: Install workstation packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  ignore_errors: true
+  loop: "{{ packages | intersect(yum_installable_out.stdout_lines) | difference(yum_installed_out.stdout_lines) }}"
+
+- name: Install flatpack
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+
+- name: Install multiple packages
+  community.general.flatpak:
+    name: "{{ item }}"
+  loop: "{{ flatpaks }}"
